@@ -75,7 +75,7 @@ ERROR: Job failed: exit code 190
 
 ## Primeiros Passos
 
-Você pode experimentar o huskyCI configurando um ambiente local usando o Docker Compose seguindo [este guia](https://huskyci.opensource.globo.com/docs/development/set-up-environment).
+Você pode experimentar o huskyCI configurando um ambiente local usando o Docker Compose seguindo [este guia](https://huskyci.opensource.globo.com/docs/quickstart/local-installation/).
 
 ## Documentação
 
