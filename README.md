@@ -1,118 +1,81 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/wiki/globocom/huskyCI/images/huskyCI-logo.png" align="center" height="" />
-  <!-- logo font: Anton -->
-</p>
+# Artigo HuskyCI SBSeg24
 
-<p align="center">
-  <a href="https://github.com/globocom/huskyCI/releases"><img src="https://img.shields.io/github/v/release/globocom/huskyCI"/></a>
-  <a href="https://github.com/rafaveira3/writing-and-presentations/blob/master/DEFCON-27-APP-SEC-VILLAGE-Rafael-Santos-huskyCI-Finding-security-flaws-in-CI-before-deploying-them.pdf"><img src="https://img.shields.io/badge/DEFCON%2027-AppSec%20Village-black"/></a>
-<a href="https://github.com/rafaveira3/contributions/blob/master/huskyCI-BlackHat-Europe-2019.pdf"><img src="https://img.shields.io/badge/Black%20Hat%20Europe%202019-Arsenal-black"/></a>
-<a href="https://defectdojo.readthedocs.io/en/latest/integrations.html#huskyci-report"><img src="https://img.shields.io/badge/DefectDojo-Compatible-brightgreen"/></a>
-</p>
+Este repositório é referente a aplicação HuskyCI, desenvolvida pelo time de Segurança da Globo.com. O HuskyCI é uma aplição Open Source que integra diferentes ferramentas de Scan SAST em Pipelines de desenvolvimento.
 
-*This article can also be read in [Brazilian Portuguese](README-ptBR.md).*
 
-## Introduction
+Para aumentar o nível de segurança nas aplicações, combinamos práticas de desenvolvimento seguro, processos e ferramentas. O HuskyCI é um orquestrador de ferramentas SAST que busca vulnerabilidades em tempo de desenvolvimento, identificando vulnerabilidades antes que estas cheguem em um ambiente produtivo. Neste apêndice, apresentamos as instruções necessárias para instalar, configurar e executar uma análise estática utilizando o HuskyCI. 
 
-huskyCI is an open source tool that orchestrates security tests and centralizes all results into a database for further analysis and metrics. It can perform static security analysis in Python ([Bandit][Bandit] and [Safety][Safety]), Ruby ([Brakeman][Brakeman]), JavaScript ([Npm Audit][NpmAudit] and [Yarn Audit][YarnAudit]), Golang ([Gosec][Gosec]), Java ([SpotBugs][SpotBugs] plus [Find Sec Bugs][FindSec]), and HCL ([TFSec][TFSec]). It can also audit repositories for secrets like AWS Secret Keys, Private SSH Keys, and many others using [GitLeaks][Gitleaks].
+## Resumo
 
-## How does it work?
+Neste repositório, está contido o código da aplicação HuskyCI, bem como o link para documentação oficial, todos os passos necessários para executar o HuskyCI em uma máquina MacOS ou Linux, desde que possua o ambiente com as dependências necessárias instaladas. 
 
-Developers can set up a new stage into their CI pipelines to check for vulnerabilities:
+O README deste repositório também possui todos os passos necessários para executar o HuskyCI em uma máquina MacOS ou Linux, desde que possua o ambiente com as dependências necessárias instaladas. 
+De maneira geral, o README apresenta informações como (i) Lista de dependências necessárias; (ii) Preparação do ambiente; (iii) Execução da ferramenta; (iv) Descrição do ambiente de execução; (v) Exemplo de execução.
 
-<p align="center"><img src="huskyCI-stage.png"/></p>
+### Depencências
 
-If security issues are found in the code, the severity, the confidence, the file, the line, and many more useful information can be shown, as exemplified:
+As dependências necessárias para execução da ferramenta são:
 
-```
-[HUSKYCI][*] poc-python-bandit -> https://github.com/globocom/huskyCI.git
-[HUSKYCI][*] huskyCI analysis started! yDS9tb9mdt4QnnyvOBp3eVAXE1nWpTRQ
+- Sistema operacional OSX ou Linux, com arquitetura amd64 ou arm64;
+- Docker Desktop;
+- Git;
+- Make para execução de um Makefile;
+- OpenSSH (em casos de repositório privado).
 
-[HUSKYCI][!] Title: Use of exec detected.
-[HUSKYCI][!] Language: Python
-[HUSKYCI][!] Tool: Bandit
-[HUSKYCI][!] Severity: MEDIUM
-[HUSKYCI][!] Confidence: HIGH
-[HUSKYCI][!] Details: Use of exec detected.
-[HUSKYCI][!] File: ./main.py
-[HUSKYCI][!] Line: 7
-[HUSKYCI][!] Code:
-6
-7 exec(command)
-8
+<strong>Observação:</strong> O HuskyCI é compatível com a arquitetura arm64m desde que as versões das ferrmanetas especificadas neste repositório não sejam modificadas.
 
-[HUSKYCI][!] Title: Possible hardcoded password: 'password123!'
-[HUSKYCI][!] Language: Python
-[HUSKYCI][!] Tool: Bandit
-[HUSKYCI][!] Severity: LOW
-[HUSKYCI][!] Confidence: MEDIUM
-[HUSKYCI][!] Details: Possible hardcoded password: 'password123!'
-[HUSKYCI][!] File: ./main.py
-[HUSKYCI][!] Line: 1
-[HUSKYCI][!] Code:
-1 secret = 'password123!'
-2
-3 password = 'thisisnotapassword' #nohusky
-4
+### Preparação do Ambiente
 
-[HUSKYCI][SUMMARY] Python -> huskyci/bandit:1.6.2
-[HUSKYCI][SUMMARY] High: 0
-[HUSKYCI][SUMMARY] Medium: 1
-[HUSKYCI][SUMMARY] Low: 1
-[HUSKYCI][SUMMARY] NoSecHusky: 1
+Para preparar o ambiente de execução do HuskyCI, é necessário instalar todas as dependências especificadas. Com o Docker instalado, basta executar os comandos contidos no arquivo `Makefile`.
 
-[HUSKYCI][SUMMARY] Total
-[HUSKYCI][SUMMARY] High: 0
-[HUSKYCI][SUMMARY] Medium: 1
-[HUSKYCI][SUMMARY] Low: 1
-[HUSKYCI][SUMMARY] NoSecHusky: 1
-
-[HUSKYCI][*] The following securityTests were executed and no blocking vulnerabilities were found:
-[HUSKYCI][*] [huskyci/gitleaks:2.1.0]
-[HUSKYCI][*] Some HIGH/MEDIUM issues were found in these securityTests:
-[HUSKYCI][*] [huskyci/bandit:1.6.2]
-ERROR: Job failed: exit code 190
+1. Realizar o clone da ferramenta no repositório `https://github.com/thiagolotufo/huskyCI.git`:
+```sh 
+git clone https://github.com/thiagolotufo/huskyCI.git
 ```
 
-## Getting Started
+2. Acessar o diretório raiz da ferramenta:
+```sh
+cd huskyCI
+```
 
-You can try huskyCI by setting up a local environment using Docker Compose following [this guide](https://huskyci.opensource.globo.com/docs/quickstart/local-installation/).
+3. Este comando é reponsável por iniciar os containers da API, banco de dados e Docker API, junto com a criação dos certificados e geração das variáveis de ambiente:
+```sh
+make install
+```
 
-## Documentation
+4. Exportar as variáveis de ambiente criadas no passo anterior:
+```sh
+source .env
+```
 
-All guides and the full documentation can be found in the [official documentation page](https://huskyci.opensource.globo.com/docs/quickstart/overview).
+### Execução da ferramenta
 
-## Contributing
+Para executar a ferramenta após preparar todo o ambiente, basta executar o comando a seguir. Este comando é reponsável por iniciar a análise e acompanhar seu status.
 
-Read our [contributing guide](https://github.com/globocom/huskyCI/blob/master/CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to huskyCI.
+```sh
+make run-client
+```
 
-## Communication
+### Descrição do ambiente de execução
 
-We have a few channels for contact, feel free to reach out to us at:
+Toda a execução é feito utilizando containers Docker. Ao preparar o ambiente, são criados três containers, contendo a API do Husky, o banco de dados MongoDB e o Docker-in-Docker reponsável por criar os containers com as ferramentas de segurança. O arquivo `.env` pode ser modificado, inserindo os valores de URL e Branch do repositório que deseja analisar. 
 
-- [GitHub Issues](https://github.com/globocom/huskyCI/issues)
-- [Gitter](https://gitter.im/globocom/huskyCI)
-- [Twitter](https://twitter.com/huskyCI)
+Após a execução da análise, com o comando `make run-client`, será feita uma requisição para o container da API, contendo as informações especificadas no `.env`. Na API, uma nova tarefa é iniciada, dando início a uma nova análise de código. Os containers contendo os testes de segurança serão criados no Docker-in-Docker, conforme as linguagens identificadas no repositório. 
 
-## Contributors
+Durante o período da análise, o client realiza requisições constantes para a API, obtendo o status da execução. Ao finalizar a análise, os resultados são enviados para o client, que por sua vez imprime as informações recebidas no terminal do usuário. 
 
-<!-- CONTRIBUTORS_START -->
-<table><tr><td align="center"><a href="https://github.com/rafaveira3"><img src="https://avatars.githubusercontent.com/u/8943477?v=4" width="100" style="border-radius: 50%;"><br>rafaveira3</a></td><td align="center"><a href="https://github.com/Krlier"><img src="https://avatars.githubusercontent.com/u/40367872?v=4" width="100" style="border-radius: 50%;"><br>Krlier</a></td><td align="center"><a href="https://github.com/spimpaov"><img src="https://avatars.githubusercontent.com/u/22274988?v=4" width="100" style="border-radius: 50%;"><br>spimpaov</a></td><td align="center"><a href="https://github.com/joserenatosilva"><img src="https://avatars.githubusercontent.com/u/11424945?v=4" width="100" style="border-radius: 50%;"><br>joserenatosilva</a></td><td align="center"><a href="https://github.com/gabriel-cantergiani"><img src="https://avatars.githubusercontent.com/u/27586618?v=4" width="100" style="border-radius: 50%;"><br>gabriel-cantergiani</a></td></tr><tr><td align="center"><a href="https://github.com/marcelomagina"><img src="https://avatars.githubusercontent.com/u/12450277?v=4" width="100" style="border-radius: 50%;"><br>marcelomagina</a></td><td align="center"><a href="https://github.com/nettoclaudio"><img src="https://avatars.githubusercontent.com/u/7503687?v=4" width="100" style="border-radius: 50%;"><br>nettoclaudio</a></td><td align="center"><a href="https://github.com/edersonbrilhante"><img src="https://avatars.githubusercontent.com/u/1094995?v=4" width="100" style="border-radius: 50%;"><br>edersonbrilhante</a></td><td align="center"><a href="https://github.com/GabhenDM"><img src="https://avatars.githubusercontent.com/u/38007503?v=4" width="100" style="border-radius: 50%;"><br>GabhenDM</a></td><td align="center"><a href="https://github.com/mdjunior"><img src="https://avatars.githubusercontent.com/u/3290669?v=4" width="100" style="border-radius: 50%;"><br>mdjunior</a></td></tr><tr><td align="center"><a href="https://github.com/fguisso"><img src="https://avatars.githubusercontent.com/u/5755568?v=4" width="100" style="border-radius: 50%;"><br>fguisso</a></td><td align="center"><a href="https://github.com/vitoriario"><img src="https://avatars.githubusercontent.com/u/17754098?v=4" width="100" style="border-radius: 50%;"><br>vitoriario</a></td><td align="center"><a href="https://github.com/rodrigo-brito"><img src="https://avatars.githubusercontent.com/u/7620947?v=4" width="100" style="border-radius: 50%;"><br>rodrigo-brito</a></td><td align="center"><a href="https://github.com/gustavocovas"><img src="https://avatars.githubusercontent.com/u/11429002?v=4" width="100" style="border-radius: 50%;"><br>gustavocovas</a></td><td align="center"><a href="https://github.com/abzcoding"><img src="https://avatars.githubusercontent.com/u/10992695?v=4" width="100" style="border-radius: 50%;"><br>abzcoding</a></td></tr><tr><td align="center"><a href="https://github.com/lzakharov"><img src="https://avatars.githubusercontent.com/u/26368218?v=4" width="100" style="border-radius: 50%;"><br>lzakharov</a></td><td align="center"><a href="https://github.com/itepifanio"><img src="https://avatars.githubusercontent.com/u/6730205?v=4" width="100" style="border-radius: 50%;"><br>itepifanio</a></td><td align="center"><a href="https://github.com/victorpalmeira"><img src="https://avatars.githubusercontent.com/u/54779178?v=4" width="100" style="border-radius: 50%;"><br>victorpalmeira</a></td><td align="center"><a href="https://github.com/meltedblocks"><img src="https://avatars.githubusercontent.com/u/46658201?v=4" width="100" style="border-radius: 50%;"><br>meltedblocks</a></td><td align="center"><a href="https://github.com/localleon"><img src="https://avatars.githubusercontent.com/u/28186014?v=4" width="100" style="border-radius: 50%;"><br>localleon</a></td></tr><tr><td align="center"><a href="https://github.com/jimmy1134"><img src="https://avatars.githubusercontent.com/u/55932754?v=4" width="100" style="border-radius: 50%;"><br>jimmy1134</a></td><td align="center"><a href="https://github.com/henriquebonadio-zz"><img src="https://avatars.githubusercontent.com/u/2007133?v=4" width="100" style="border-radius: 50%;"><br>henriquebonadio-zz</a></td><td align="center"><a href="https://github.com/vfiebig"><img src="https://avatars.githubusercontent.com/u/862243?v=4" width="100" style="border-radius: 50%;"><br>vfiebig</a></td><td align="center"><a href="https://github.com/gitter-badger"><img src="https://avatars.githubusercontent.com/u/8518239?v=4" width="100" style="border-radius: 50%;"><br>gitter-badger</a></td><td align="center"><a href="https://github.com/renatoaquino"><img src="https://avatars.githubusercontent.com/u/516453?v=4" width="100" style="border-radius: 50%;"><br>renatoaquino</a></td></tr><tr><td align="center"><a href="https://github.com/RayTdC"><img src="https://avatars.githubusercontent.com/u/112362301?v=4" width="100" style="border-radius: 50%;"><br>RayTdC</a></td><td align="center"><a href="https://github.com/rafaelrubbioli"><img src="https://avatars.githubusercontent.com/u/15738138?v=4" width="100" style="border-radius: 50%;"><br>rafaelrubbioli</a></td><td align="center"><a href="https://github.com/rafaelsq"><img src="https://avatars.githubusercontent.com/u/1598854?v=4" width="100" style="border-radius: 50%;"><br>rafaelsq</a></td><td align="center"><a href="https://github.com/ragoso"><img src="https://avatars.githubusercontent.com/u/9319775?v=4" width="100" style="border-radius: 50%;"><br>ragoso</a></td><td align="center"><a href="https://github.com/aranhams"><img src="https://avatars.githubusercontent.com/u/18319426?v=4" width="100" style="border-radius: 50%;"><br>aranhams</a></td></tr></table>
-<!-- CONTRIBUTORS_END -->
+### Exemplo de execução
 
-This project exists thanks to all the [contributors]((https://github.com/globocom/huskyCI/graphs/contributors)). You rock!   ❤️🚀
+Neste exemplo, utilizaremos o próprio repositório da ferramenta. Para esta execução, é necessário editar o arquivo `.env` gerado de forma automática durante a preparação do ambiente.
 
-## License
+![variáveis de ambiente do .env](image.png)
 
-huskyCI is licensed under the [BSD 3-Clause "New" or "Revised" License](https://github.com/globocom/huskyCI/blob/master/LICENSE.md).
+Após iniciar a análise, um ID será gerado e o client começa a executar requisições temporizadas para a API, com o objetivo de identificar o status da execução. 
 
-[Bandit]: https://github.com/PyCQA/bandit
-[Safety]: https://github.com/pyupio/safety
-[Brakeman]: https://github.com/presidentbeef/brakeman
-[Gosec]: https://github.com/securego/gosec
-[NpmAudit]: https://docs.npmjs.com/cli/audit
-[YarnAudit]: https://yarnpkg.com/lang/en/docs/cli/audit/
-[Gitleaks]: https://github.com/zricethezav/gitleaks
-[SpotBugs]: https://spotbugs.github.io
-[FindSec]: https://find-sec-bugs.github.io
-[TFSec]: https://github.com/liamg/tfsec
+![análise iniciada](image-1.png)
+
+Ao finalizar a análise, os resultados obtidos através dos testes de segurança são impressos no terminal do usuário
+
+![resultados da análise](image-2.png)
+
+Neste caso, não foram encontradas vulnerabilidades no código do HuskyCI. 
