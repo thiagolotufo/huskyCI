@@ -1,9 +1,10 @@
 # Artigo HuskyCI SBSeg24
 
-Este repositório é referente a aplicação HuskyCI, desenvolvida pelo time de Segurança da Globo.com. O HuskyCI é uma aplição Open Source que integra diferentes ferramentas de Scan SAST em Pipelines de desenvolvimento.
+Para aumentar o nível de segurança nas aplicações, combinamos práticas de desenvolvimento seguro, processos e ferramentas. O HuskyCI é um orquestrador open source que integra diferentes ferramentas SAST e SCA em pipelines de desenvolvimento, e tem como objetivo buscar vulnerabilidades em tempo de desenvolvimento, identificando vulnerabilidades antes que estas cheguem em um ambiente produtivo. Neste documento, apresentamos as instruções necessárias para instalar, configurar e executar uma análise estática utilizando o HuskyCI.
 
+Este repositório está vinculado ao artigo "HuskyCI: um orquestrador de testes de segurança em software para ciclos ágeis de desenvolvimento", submetido ao VIII Salão de Ferramentas do 24º Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais (SBSeg).
 
-Para aumentar o nível de segurança nas aplicações, combinamos práticas de desenvolvimento seguro, processos e ferramentas. O HuskyCI é um orquestrador de ferramentas SAST que busca vulnerabilidades em tempo de desenvolvimento, identificando vulnerabilidades antes que estas cheguem em um ambiente produtivo. Neste apêndice, apresentamos as instruções necessárias para instalar, configurar e executar uma análise estática utilizando o HuskyCI. 
+Resumo do artigo: "DevSecOps combina desenvolvimento, segurança e operações para criar um processo ágil e seguro de entrega de software. A metodologia promove a integração da segurança no ciclo de desenvolvimento, o que diminui custos e esforços de correção. As pipelines de CI/CD automatizam o fluxo do código desde a construção até a produção, enquanto ferramentas SAST e SCA detectam vulnerabilidades de segurança. Neste artigo, apresentamos o HuskyCI, uma ferramenta de código aberto que orquestra testes de segurança em pipelines CI, oferecendo suporte a múltiplas linguagens e integração com ferramentas existentes. Conduzimos uma avaliação sobre tempo de execução dos testes e concluímos que ele não compromete o ciclo de desenvolvimento ágil dos projetos."
 
 ## Resumo
 
