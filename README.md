@@ -21,7 +21,8 @@ As dependências necessárias para execução da ferramenta são:
 - Docker Desktop;
 - Git;
 - Make para execução de um Makefile;
-- OpenSSH (em casos de repositório privado).
+- OpenSSH (em casos de repositório privado);
+- GoLang versão 1.20 ou superior.
 
 <strong>Observação:</strong> O HuskyCI é compatível com a arquitetura arm64m desde que as versões das ferrmanetas especificadas neste repositório não sejam modificadas.
 
@@ -63,7 +64,9 @@ Toda a execução é feito utilizando containers Docker. Ao preparar o ambiente,
 
 Após a execução da análise, com o comando `make run-client`, será feita uma requisição para o container da API, contendo as informações especificadas no `.env`. Na API, uma nova tarefa é iniciada, dando início a uma nova análise de código. Os containers contendo os testes de segurança serão criados no Docker-in-Docker, conforme as linguagens identificadas no repositório. 
 
-Durante o período da análise, o client realiza requisições constantes para a API, obtendo o status da execução. Ao finalizar a análise, os resultados são enviados para o client, que por sua vez imprime as informações recebidas no terminal do usuário. 
+Durante o período da análise, o client realiza requisições constantes para a API, obtendo o status da execução. Ao finalizar a análise, os resultados são enviados para o client, que por sua vez imprime as informações recebidas no terminal do usuário.
+
+<strong>OBSERVAÇÃO:</strong> Para execução do HuskyCI em um repositório, é necessário alterar o valor das variáveis `HUSKYCI_CLIENT_REPO_URL` e `HUSKYCI_CLIENT_REPO_BRANCH` com o repositório e branch de destino no arquivo `.env`, respectivamente. Após realizar esta alteração, é necessário exportar o arquivo `.env` novamente, exeutando o <strong>item 4</strong> da sessão [Preparação do Ambiente](#preparação-do-ambiente) deste `README.md`.
 
 ### Exemplo de execução
 
