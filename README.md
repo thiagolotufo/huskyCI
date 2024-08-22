@@ -17,14 +17,24 @@ De maneira geral, o README apresenta informações como (i) Lista de dependênci
 
 As dependências necessárias para execução da ferramenta são:
 
-- Sistema operacional OSX ou Linux, com arquitetura amd64 ou arm64;
-- Docker Desktop;
-- Git;
-- Make para execução de um Makefile;
-- OpenSSH (em casos de repositório privado);
+- Sistema operacional macOS Big Sur 11.7 ou superior ou Linux Debian 11 ou superior, com arquitetura amd64 ou arm64;
+- Docker Desktop 4.0.0 ou superior;
+- Git versão 2 ou superior;
+- Make 3.81 para execução de um Makefile;
+- OpenSSL 3.0 ou superior (em casos de repositório privado);
 - GoLang versão 1.20 ou superior.
 
 <strong>Observação:</strong> O HuskyCI é compatível com a arquitetura arm64m desde que as versões das ferrmanetas especificadas neste repositório não sejam modificadas.
+
+Para instalar as dependências utilizando um script `shell`, basta executar os seguintes comandos:
+
+```sh
+chmod +x env/prepare-env-<YOUR-OS>.sh
+```
+
+```sh
+./env/prepare-env-<YOUR-OS>.sh
+```
 
 ### Preparação do Ambiente
 
@@ -83,3 +93,17 @@ Ao finalizar a análise, os resultados obtidos através dos testes de segurança
 ![resultados da análise](image-2.png)
 
 Neste caso, não foram encontradas vulnerabilidades no código do HuskyCI. 
+
+### Configurações de ambiente utilizadas
+
+- Sistema Operacional: MacOS Sonoma 14.4.1
+- Arquitetura do Sistema: ARM64
+- Docker version 27.0.3
+- GNU Make 3.81
+- OpenSSL 3.3.0
+- Go 1.22.5 darwin/arm64
+
+### Documentação oficial do HuskyCI
+
+Para acessar a documentação oficial da ferramenta, é necessário acessar este [link](https://huskyci.opensource.globo.com/docs/overview/).
+Para acessar o repositório Open Source, com o README oficial da ferramenta e todas as contribuições realizadas, é necessário acessar este [link](https://github.com/globocom/huskyCI).
